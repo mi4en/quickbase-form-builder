@@ -137,7 +137,11 @@
 				<!-- Form Controls -->
 				<b-form-row>
 					<b-col offset="3" class="mt-5">
-						<b-button class="mr-2" variant="success">Save changes</b-button> Or
+						<SaveButton
+							:url="'http://www.mocky.io/v2/566061f21200008e3aabd919'"
+							:payload="payload"
+						/>
+						Or
 						<span class="cancel ml-2" @click="resetForm">Cancel</span>
 					</b-col>
 				</b-form-row>
@@ -147,8 +151,13 @@
 </template>
 
 <script>
+	import SaveButton from '@/components/SaveButton.vue';
+
 	export default {
 		name: 'FormBuilder',
+		components: {
+			SaveButton,
+		},
 
 		data() {
 			return {
@@ -167,6 +176,16 @@
 				choicesDuplicateError: false,
 				choicesLengthError: false,
 			};
+		},
+		computed: {
+			payload() {
+				return {
+					label: this.label,
+					type: this.type,
+					defaultValue: this.defaultValue,
+					choices: this.choices,
+				};
+			},
 		},
 		methods: {
 			backup(value, field) {
