@@ -59,6 +59,7 @@
 							id="default-value"
 							v-model="defaultValue"
 							@input="backup($event, 'defaultValue')"
+							@blur="syncChoices"
 							type="text"
 							placeholder="Enter Default Choice"
 							required
@@ -191,6 +192,10 @@
 			backup(value, field) {
 				localStorage.setItem(field, value);
 			},
+			syncChoices() {
+				this.newChoice = this.defaultValue;
+				this.addChoice();
+			},
 			addChoice() {
 				this.choices.forEach(choice => {
 					if (choice.toLowerCase() === this.newChoice.toLowerCase()) {
@@ -209,6 +214,10 @@
 				}
 			},
 			removeChoice(choice) {
+				if (choice === this.defaultValue) {
+					this.defaultValue = '';
+				}
+
 				this.choices.pop(choice);
 				this.backup(JSON.stringify(this.choices), 'choices');
 			},

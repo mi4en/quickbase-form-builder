@@ -30,6 +30,7 @@
 				try {
 					const res = await this.$http.post(this.url, this.payload);
 					console.log({ res });
+					console.log('payload: ', this.payload);
 				} catch (error) {
 					console.error(error);
 				} finally {
