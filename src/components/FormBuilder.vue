@@ -28,6 +28,26 @@
 					</b-col>
 				</b-form-row>
 
+				<!-- Type -->
+				<b-form-row id="group-type" label-for="type" class="mt-4">
+					<b-col lg="3" sm="12" class="mt-2">
+						<label for="type">Type</label>
+					</b-col>
+
+					<b-col sm="12" lg="6" class="mt-2">
+						<b-row>
+							<b-col cols="4" class="multi-select">
+								Multi-select
+							</b-col>
+							<b-col cols="8">
+								<b-form-checkbox v-model="type"
+									>A Value is required</b-form-checkbox
+								>
+							</b-col>
+						</b-row>
+					</b-col>
+				</b-form-row>
+
 				<!-- Default Value -->
 				<b-form-row id="group-default-value" class="mt-4">
 					<b-col lg="3" sm="12" class="mt-2">
@@ -60,7 +80,7 @@
 								v-model="newChoice"
 								type="text"
 								placeholder="Enter New Choice"
-								@focus="duplicateChoiceError = false"
+								@focus="choicesDuplicateError = false"
 								required
 							>
 							</b-form-input>
@@ -69,8 +89,14 @@
 							</b-input-group-append>
 						</b-input-group>
 
-						<div v-if="duplicateChoiceError" cols="4" class="error mt-1">
+						<!-- Duplicate Error -->
+						<div v-if="choicesDuplicateError" cols="4" class="error mt-1">
 							Duplicate entries are not allowed!
+						</div>
+
+						<!-- Length Error -->
+						<div v-if="choicesLengthError" cols="4" class="error mt-1">
+							Maximum of {{ maxChoices }} choices allowed!
 						</div>
 					</b-col>
 				</b-form-row>
@@ -112,7 +138,7 @@
 				<b-form-row>
 					<b-col offset="3" class="mt-5">
 						<b-button class="mr-2" variant="success">Save changes</b-button> Or
-						<span class="cancel ml-2"><strong>Cancel</strong></span>
+						<span class="cancel ml-2" @click="resetForm">Cancel</span>
 					</b-col>
 				</b-form-row>
 			</b-form>
@@ -129,12 +155,17 @@
 				label: localStorage.getItem('label')
 					? localStorage.getItem('label')
 					: '',
+				type: false,
 				defaultValue: localStorage.getItem('defaultValue')
 					? localStorage.getItem('defaultValue')
 					: '',
 				newChoice: '',
-				choices: ['Asia', 'Americas', 'Europe'],
-				duplicateChoiceError: false,
+				choices: localStorage.getItem('choices')
+					? JSON.parse(localStorage.getItem('choices'))
+					: [],
+				maxChoices: 2,
+				choicesDuplicateError: false,
+				choicesLengthError: false,
 			};
 		},
 		methods: {
@@ -144,22 +175,31 @@
 			addChoice() {
 				this.choices.forEach(choice => {
 					if (choice.toLowerCase() === this.newChoice.toLowerCase()) {
-						this.duplicateChoiceError = true;
+						this.choicesDuplicateError = true;
+					}
+
+					if (this.choices.length === this.maxChoices) {
+						this.choicesLengthError = true;
 					}
 				});
 
-				if (!this.duplicateChoiceError) {
+				if (!this.choicesDuplicateError && !this.choicesLengthError) {
 					this.choices.push(this.newChoice);
+					this.backup(JSON.stringify(this.choices), 'choices');
+					this.newChoice = '';
 				}
 			},
 			removeChoice(choice) {
 				this.choices.pop(choice);
+				this.backup(JSON.stringify(this.choices), 'choices');
 			},
-		},
-		mounted() {
-			if (this.defaultValue) {
-				this.choices.push(this.defaultValue);
-			}
+			resetForm() {
+				localStorage.clear();
+				this.label = '';
+				this.defaultValue = '';
+				this.choices = '';
+				this.choicesDuplicateError = false;
+			},
 		},
 	};
 </script>
@@ -184,8 +224,13 @@
 			}
 		}
 
+		.multi-select {
+			font-weight: bold;
+		}
+
 		.cancel {
 			color: crimson;
+			font-weight: bold;
 			cursor: pointer;
 		}
 	}
