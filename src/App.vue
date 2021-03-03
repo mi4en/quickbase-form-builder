@@ -29,4 +29,8 @@
 			}
 		}
 	}
+
+	.error {
+		color: crimson;
+	}
 </style>
