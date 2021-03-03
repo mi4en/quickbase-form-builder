@@ -16,6 +16,7 @@ module.exports = {
 		'no-tabs': 0,
 		'no-return-assign': 0,
 		'arrow-parens': 0,
+		'linebreak-style': 0,
 	},
 	overrides: [
 		{
