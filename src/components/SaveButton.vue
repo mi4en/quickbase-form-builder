@@ -17,6 +17,10 @@
 				type: Object,
 				required: true,
 			},
+			isValid: {
+				type: Boolean,
+				required: true,
+			},
 		},
 		data() {
 			return {
@@ -24,18 +28,25 @@
 			};
 		},
 		methods: {
-			async save() {
+			save() {
 				this.isLoading = true;
+				this.$emit('validate');
 
-				try {
-					const res = await this.$http.post(this.url, this.payload);
-					console.log({ res });
-					console.log('payload: ', this.payload);
-				} catch (error) {
-					console.error(error);
-				} finally {
-					this.isLoading = false;
-				}
+				this.$nextTick(async () => {
+					if (this.isValid) {
+						try {
+							const res = await this.$http.post(this.url, this.payload);
+							console.log({ res });
+							console.log('payload: ', this.payload);
+						} catch (error) {
+							console.error(error);
+						} finally {
+							this.isLoading = false;
+						}
+					} else {
+						this.isLoading = false;
+					}
+				});
 			},
 		},
 	};

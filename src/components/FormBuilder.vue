@@ -22,9 +22,13 @@
 							@input="backup($event, 'label')"
 							type="text"
 							placeholder="Sales Region"
+							:state="labelState"
 							required
 						>
 						</b-form-input>
+						<b-form-invalid-feedback id="input-live-feedback">
+							Required field
+						</b-form-invalid-feedback>
 					</b-col>
 				</b-form-row>
 
@@ -141,6 +145,8 @@
 						<SaveButton
 							:url="'http://www.mocky.io/v2/566061f21200008e3aabd919'"
 							:payload="payload"
+							:isValid="isValid"
+							@validate="validate"
 						/>
 						Or
 						<span class="cancel ml-2" @click="resetForm">Cancel</span>
@@ -165,6 +171,7 @@
 				label: localStorage.getItem('label')
 					? localStorage.getItem('label')
 					: '',
+				labelState: null,
 				type: false,
 				defaultValue: localStorage.getItem('defaultValue')
 					? localStorage.getItem('defaultValue')
@@ -176,6 +183,7 @@
 				maxChoices: 2,
 				choicesDuplicateError: false,
 				choicesLengthError: false,
+				isValid: true,
 			};
 		},
 		computed: {
@@ -227,6 +235,12 @@
 				this.defaultValue = '';
 				this.choices = '';
 				this.choicesDuplicateError = false;
+			},
+			validate() {
+				if (this.label === '') {
+					this.labelState = false;
+					this.isValid = false;
+				}
 			},
 		},
 	};
