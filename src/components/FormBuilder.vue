@@ -20,6 +20,7 @@
 							id="label"
 							v-model="label"
 							@input="backup($event, 'label')"
+							@focus="labelState = null"
 							type="text"
 							placeholder="Sales Region"
 							:state="labelState"
@@ -139,10 +140,29 @@
 					</b-col>
 				</b-form-row>
 
+				<!-- Order -->
+				<b-form-row id="group-order" class="mt-4">
+					<b-col lg="3" sm="12" class="mt-2">
+						<label for="order">Order</label>
+					</b-col>
+
+					<b-col sm="12" lg="6">
+						<b-form-select
+							id="order"
+							v-model="order"
+							:options="orderOptions"
+							@input="backup($event, 'defaultValue')"
+							type="text"
+						>
+						</b-form-select>
+					</b-col>
+				</b-form-row>
+
 				<!-- Form Controls -->
 				<b-form-row>
 					<b-col offset="3" class="mt-5">
 						<SaveButton
+							:variant="'success'"
 							:url="'http://www.mocky.io/v2/566061f21200008e3aabd919'"
 							:payload="payload"
 							:isValid="isValid"
@@ -183,6 +203,8 @@
 				maxChoices: 2,
 				choicesDuplicateError: false,
 				choicesLengthError: false,
+				order: 'Display choices alphabetical',
+				orderOptions: ['Display choices alphabetical'],
 				isValid: true,
 			};
 		},
@@ -193,6 +215,7 @@
 					type: this.type,
 					defaultValue: this.defaultValue,
 					choices: this.choices,
+					order: this.order,
 				};
 			},
 		},
@@ -235,6 +258,7 @@
 				this.defaultValue = '';
 				this.choices = '';
 				this.choicesDuplicateError = false;
+				this.labelState = null;
 			},
 			validate() {
 				if (this.label === '') {

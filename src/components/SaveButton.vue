@@ -1,5 +1,5 @@
 <template>
-	<b-button class="mr-2" variant="success" @click="save"
+	<b-button class="mr-2" :variant="variant" @click="save"
 		>Save changes <b-spinner v-if="isLoading" small></b-spinner
 	></b-button>
 </template>
@@ -9,6 +9,10 @@
 		name: 'SaveButton',
 
 		props: {
+			variant: {
+				type: String,
+				required: true,
+			},
 			url: {
 				type: String,
 				required: true,
@@ -52,4 +56,4 @@
 	};
 </script>
 
-<style></style>
+<style scoped lang="scss"></style>
