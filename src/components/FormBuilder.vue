@@ -45,7 +45,7 @@
 								Multi-select
 							</b-col>
 							<b-col cols="8">
-								<b-form-checkbox v-model="type"
+								<b-form-checkbox v-model="type" @change="backup(type, 'type')"
 									>A Value is required</b-form-checkbox
 								>
 							</b-col>
@@ -192,7 +192,9 @@
 					? localStorage.getItem('label')
 					: '',
 				labelState: null,
-				type: false,
+				type: localStorage.getItem('type')
+					? localStorage.getItem('type')
+					: false,
 				defaultValue: localStorage.getItem('defaultValue')
 					? localStorage.getItem('defaultValue')
 					: '',
@@ -200,7 +202,7 @@
 				choices: localStorage.getItem('choices')
 					? JSON.parse(localStorage.getItem('choices'))
 					: [],
-				maxChoices: 2,
+				maxChoices: 50,
 				choicesDuplicateError: false,
 				choicesLengthError: false,
 				order: 'Display choices alphabetical',
